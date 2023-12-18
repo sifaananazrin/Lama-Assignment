@@ -11,6 +11,7 @@ import Login from "../components/Modals/Login";
 import AddProject from "../components/Modals/AddProject";
 import TranscriptPage from "../Pages/Transcript";
 import ProjectsList from "../components/HomePageComponents/ProjectsList";
+import NotFoundPage from "../Pages/NotFoundPage";
 function UserRoute() {
   return (
     <>
@@ -24,6 +25,8 @@ function UserRoute() {
         <Route path="/login" element={<Login />} />
         <Route path="/add-project" element={<AddProject />} />
         <Route path="/project-list" element={<ProjectsList />} />
+        <Route path="*" element={<NotFoundPage />} /> 
+
       </Routes>
     </>
   );

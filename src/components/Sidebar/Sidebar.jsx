@@ -5,10 +5,18 @@ import {
   FaFileAlt,
   FaBroadcastTower,
   FaPowerOff,
+  FaSignOutAlt
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function Sidebar() {
+
+  const handleLogout = () => {
+    // Add your logout logic here
+    // For example, you can clear the user's session or perform any necessary logout actions
+    console.log("User logged out");
+  };
+
   return (
     <div className="fixed top-0 left-0 h-screen w-20 md:w-72 bg-white text-purple-600 shadow-xl overflow-y-auto">
       <div className="flex items-center justify-center md:justify-start md:px-6 py-6 border-b border-purple-200">
@@ -96,6 +104,17 @@ function Sidebar() {
               Settings
             </span>
           </Link>
+        </li>
+        <li className="group transition duration-300 ease-in-out transform hover:scale-110">
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center md:justify-start py-4 md:px-8 w-full h-full"
+          >
+            <FaSignOutAlt className="md:mr-4" size={24} />
+            <span className="hidden md:block md:ml-4 group-hover:rounded-full group-hover:bg-purple-700 group-hover:text-white">
+              Logout
+            </span>
+          </button>
         </li>
       </ul>
     </div>

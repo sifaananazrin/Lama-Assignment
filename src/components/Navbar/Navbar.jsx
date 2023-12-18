@@ -1,13 +1,19 @@
 import React from "react";
 import { IoIosHome } from "react-icons/io";
-import { AiOutlineSetting, AiOutlineBell } from "react-icons/ai";
+import { AiOutlineSetting, AiOutlineBell, AiOutlineLogout } from "react-icons/ai";
 
 const Navbar = () => {
+  const handleLogout = () => {
+    // Add your logout logic here
+    // For example, you can clear the user's session or perform any necessary logout actions
+    console.log("User logged out");
+  };
+
   return (
     <>
       <nav className="bg-white shadow px-10 py-5 flex justify-between items-center">
         <div className="flex items-center">
-          <svg
+        <svg
             xmlns="http://www.w3.org/2000/svg"
             width="53"
             height="53"
@@ -29,6 +35,9 @@ const Navbar = () => {
         <div className="flex items-center">
           <AiOutlineSetting className="text-gray-700 text-xl mx-4" />
           <AiOutlineBell className="text-gray-700 text-xl" />
+          <button onClick={handleLogout} className="text-gray-700 text-xl">
+            <AiOutlineLogout />
+          </button>
         </div>
       </nav>
       <div className="pl-60 py-2 bg-white">
