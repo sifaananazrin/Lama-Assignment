@@ -13,8 +13,6 @@ Briefly describe your project in one or two sentences.
 - [Authentication](#authentication)
 - [Protected Routes](#protected-routes)
 - [Spinner Component](#spinner-component)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
