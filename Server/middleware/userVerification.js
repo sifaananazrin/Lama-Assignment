@@ -1,37 +1,42 @@
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
-module.exports = {
-  verify: (req, res, next) => {
-    const token = req.headers.authorization;
-    if (!token) {
-      return res.status(400).send({
-        token: false,
-        message: "No token provided",
-      });
-    }
-    try {
-      const decoded = jwt.verify(
-        token.split(" ")[1],
-        process.env.JWT_SECRET_KEY
-      );
-      if (decoded) {
-        User.findOne({ _id: decoded.userId }).then((user) => {
-          req.id = decoded.userId;
-          next();
-        });
-      } else {
-        return res.status(400).send({
-          token: false,
-          message: "invalid token",
-        });
+dotenv.config();
+
+const validateToken = async (req, res, next) => {
+  const authHeader = req.header('Authorization');
+  const token = authHeader && authHeader.split(' ')[1]; 
+  
+  if (token === 'null') {
+    return res.status(401).send('Access Denied. No token provided.');
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    if (decoded) {
+     
+      const userId = decoded.userId;
+
+      
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(401).send('User not found.');
       }
-    } catch (err) {
-      return res.status(400).send({
-        token: false,
-        message: "invalid token",
-      });
+
+    
+      req.user = user;
+
+      return next();
+    } else {
+      console.log("decoded")
+      throw new Error();
     }
-  },
+  } catch (error) {
+    res.status(400).send('Invalid Token.');
+  }
 };
+
+module.exports = validateToken;

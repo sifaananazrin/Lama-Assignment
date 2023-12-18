@@ -2,9 +2,12 @@ import React from "react";
 import { FiCheckCircle, FiEdit2, FiTrash2 } from "react-icons/fi";
 import Header from "../Navbar/Header";
 import UploadModals from "../Modals/UploadModals";
+import { useNavigate } from 'react-router-dom';
 
 import { deleteFile } from "../../api-helpers/api-helpers";
 export default function UploadHome({ project, projectId }) {
+  const navigate = useNavigate();
+  
   const deleteFiledata = async (fileId) => {
     try {
       const response = deleteFile(fileId, projectId);
@@ -19,7 +22,11 @@ export default function UploadHome({ project, projectId }) {
       console.error("Error deleting file:", error);
     }
   };
-
+  const editFile = async (fileId) => {
+    const fileToEdit = project.find(file => file._id === fileId);
+    navigate(`/user/edit-transcript/${fileId}/${projectId}`, { state: { file: fileToEdit } });
+     
+  };
   console.log("props data", project);
 
   return (
@@ -69,7 +76,7 @@ export default function UploadHome({ project, projectId }) {
                   )}
                 </td>
                 <td className="px-5 py-5 border-b border-gray-200 text-sm">
-                  <FiEdit2 className="inline-block mr-2 text-blue-500 cursor-pointer" />
+                  <FiEdit2   onClick={() => editFile(file._id)} className="inline-block mr-2 text-blue-500 cursor-pointer" />
                   <FiTrash2
                     className="inline-block text-red-500 cursor-pointer"
                     onClick={() => deleteFiledata(file._id)}

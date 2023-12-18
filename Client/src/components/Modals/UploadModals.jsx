@@ -1,23 +1,59 @@
 import React, { useState } from "react";
 import UploadModal from "../../Pages/UploadModal";
 import { FiUploadCloud, FiYoutube, FiRadio } from "react-icons/fi";
+import { addProjectFile } from "../../api-helpers/api-helpers";
+import { useParams } from "react-router-dom";
 
 const UploadModals = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [fileName, setFileName] = useState("");
-  const [description, setDescription] = useState("");
-
-  const openModal = () => setIsModalOpen(true);
-
-  const closeModal = () => setIsModalOpen(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [uploadType, setUploadType] = useState(""); // Track the upload type
+  const { id } = useParams();
 
   const handleFileNameChange = (name) => setFileName(name);
-
   const handleDescriptionChange = (desc) => setDescription(desc);
+  const token = localStorage.getItem("token");
 
-  const handleUpload = () => {
-    console.log("Uploading:", fileName, description);
-    closeModal();
+  const [fileData, setFileData] = useState({ fileName: "", description: "" });
+
+  const onFileNameChange = (newFileName) => {
+    setFileData((prevFileData) => ({ ...prevFileData, fileName: newFileName }));
+  };
+
+  const onDescriptionChange = (newDescription) => {
+    setFileData((prevFileData) => ({
+      ...prevFileData,
+      description: newDescription,
+    }));
+  };
+
+  const resetFileData = () => {
+    setFileData({ fileName: "", description: "" });
+  };
+
+  const handleOpenModal = (type) => {
+    resetFileData();
+    setUploadType(type);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    resetFileData();
+    setModalOpen(false);
+    setUploadType("");
+  };
+
+  const handleFileUpload = async () => {
+    try {
+      console.log("Sending to backend:", fileData);
+      const data = await addProjectFile(token, fileData, id);
+      window.location.reload();
+      if (data.status === 201) {
+        console.log("File added to the project successfully");
+        handleCloseModal();
+      }
+    } catch (error) {
+      console.error("Error adding file to the project:", error);
+    }
   };
 
   return (
@@ -28,16 +64,25 @@ const UploadModals = () => {
 
       {/* Upload options */}
       <div className="flex justify-center space-x-4 mb-4">
-        <div className="p-4 border rounded-lg text-center " onClick={openModal}>
+        <div
+          className="cursor-pointer p-4 border rounded-lg text-center"
+          onClick={() => handleOpenModal("youtube")}
+        >
           <FiYoutube className="text-red-500 text-3xl mx-auto" />
           <p className="mt-2">Upload Youtube Video</p>
         </div>
-        <div className="p-4 border rounded-lg text-center" onClick={openModal}>
+        <div
+          className="p-4 border rounded-lg text-center"
+          onClick={() => handleOpenModal("spotify")}
+        >
           <FiRadio className="text-green-500 text-3xl mx-auto" />
           <p className="mt-2">Upload Spotify Podcast</p>
         </div>
 
-        <div className="p-4 border rounded-lg text-center" onClick={openModal}>
+        <div
+          className="p-4 border rounded-lg text-center"
+          onClick={() => handleOpenModal("file")}
+        >
           <FiUploadCloud className="text-purple-500 text-3xl mx-auto" />
           <p className="mt-2">Upload Media or Text File</p>
         </div>
@@ -55,15 +100,15 @@ const UploadModals = () => {
       </div>
 
       {/* Table of uploaded items */}
-
       <UploadModal
         isOpen={isModalOpen}
-        closeModal={closeModal}
-        onFileNameChange={handleFileNameChange}
-        onDescriptionChange={handleDescriptionChange}
-        onUpload={handleUpload}
-        fileName={fileName}
-        description={description}
+        closeModal={handleCloseModal}
+        onFileNameChange={onFileNameChange}
+        fileName={fileData.fileName}
+        description={fileData.description}
+        onDescriptionChange={onDescriptionChange}
+        onUpload={handleFileUpload}
+        uploadType={uploadType}
       />
     </>
   );

@@ -8,12 +8,14 @@ import AddProject from "../Modals/AddProject";
 import LoginModal from "../Modals/Login";
 import { createProject } from "../../api-helpers/api-helpers";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../../components/Spinner/Spinner";
 
 function Project() {
   const Navigate = useNavigate();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [createdProject, setCreatedProject] = useState(null);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
   console.log("token", token);
 
@@ -33,8 +35,9 @@ function Project() {
   const handleProjectSubmit = async (projectName) => {
     try {
       const projectData = { title: projectName };
+      setLoading(true);
       const response = await createProject(projectData, token);
-
+      setLoading(false);
       console.log("Response from createProject:", response);
 
       setCreatedProject(response);
@@ -48,8 +51,13 @@ function Project() {
     }
   };
 
+  if (loading) {
+    return  <Spinner loading={loading} />
+  }
+  
   return (
     <>
+    
       <ToastContainer />
       <div className="flex flex-col min-h-screen bg-white">
         <Navbar />

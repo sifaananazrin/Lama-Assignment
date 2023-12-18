@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const projectController = require("../controllers/projectController");
+const validateUserToken = require('../Middleware/userVerification');
 
-router.get("/", projectController.getAllProjects);
-router.post("/add", projectController.createProject);
-router.post("/addfile/:id", projectController.addfile);
+router.get("/", validateUserToken,projectController.getAllProjects);
+router.post("/add", validateUserToken,projectController.createProject);
+router.post("/addfile/:id",validateUserToken, projectController.addfile);
 router.put("/editfile/:projectId/:fileId", projectController.editFileInProject);
 router.get("/getfile/:id", projectController.getProjectFiles);
 router.delete(

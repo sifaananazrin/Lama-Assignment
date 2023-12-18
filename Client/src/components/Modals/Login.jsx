@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Spinner from "../../components/Spinner/Spinner";
 import {
   AiOutlineMail,
   AiOutlineLock,
@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 
 const LoginModal = ({ isOpen, onClose }) => {
   const Navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,9 +25,10 @@ const LoginModal = ({ isOpen, onClose }) => {
     try {
       let response;
       if (isRegistering) {
+        setLoading(true);
         response = await register(name, email, password);
         toast.success("Registration successful!");
-
+        setLoading(false);
         setIsRegistering(false);
         setEmail("");
         setPassword("");
@@ -33,7 +36,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       } else {
         response = await login(email, password);
         toast.success("Login successful!");
-
+        window.location.reload();
         const token = response.data.token;
         localStorage.setItem("token", token);
 
@@ -50,6 +53,12 @@ const LoginModal = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen) return null;
+
+
+  if (loading) {
+    return  <Spinner loading={loading} />
+  }
+  
 
   return (
     <>

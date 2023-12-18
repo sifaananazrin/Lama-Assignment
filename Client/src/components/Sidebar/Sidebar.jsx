@@ -8,13 +8,14 @@ import {
   FaSignOutAlt
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
 function Sidebar() {
-
+  const navigate = useNavigate();
   const handleLogout = () => {
-    // Add your logout logic here
-    // For example, you can clear the user's session or perform any necessary logout actions
+    localStorage.removeItem("token");
+    navigate('/'); 
     console.log("User logged out");
+    window.location.reload();
   };
 
   return (

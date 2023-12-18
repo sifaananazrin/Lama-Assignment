@@ -127,7 +127,7 @@ const projectController = {
   editFileInProject: async (req, res) => {
     const { projectId, fileId } = req.params;
     const { fileName, description } = req.body;
-
+console.log(req.body)
     try {
       const project = await Project.findById(projectId);
 

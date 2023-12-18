@@ -13,7 +13,7 @@ export const register = (name, email, password) => {
 
 export const createProject = async (projectData, token) => {
   try {
-    const response = await axios.post('http://localhost:3000/projects/add', projectData, {
+    const response = await axios.post(`${API_BASE_URL}/projects/add`, projectData, {
   headers: {
     'Authorization': `Bearer ${token}`
   }
@@ -92,14 +92,23 @@ export const deleteFile = async (fileId,projectId) => {
     const response = await axios.delete(`${API_BASE_URL}/projects/deletefile/${projectId}/${fileId}`)
 
     if (response.status === 204) {
-      // File deletion was successful
+    
       console.log("File deleted successfully");
-      // You may want to update the component's state or UI to reflect the deletion
+    
     } else {
       console.error("File deletion failed");
-      // Handle the case where file deletion failed
+    
     }
   } catch (error) {
     console.error("Error deleting file:", error);
+  }
+};
+export const editfiles = async (fileId,projectId,fileData) => {
+  try {
+    const response = await axios.put(`${API_BASE_URL}/projects/editfile/${projectId}/${fileId}`,fileData)
+
+    return response.data;
+  } catch (error) {
+    console.error("Error Edit file:", error);
   }
 };

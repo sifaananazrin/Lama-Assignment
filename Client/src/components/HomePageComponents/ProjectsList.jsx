@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import Spinner from "../../components/Spinner/Spinner";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../Navbar/Navbar";
 import ProjectCard from "./ProjectCard";
@@ -11,7 +11,7 @@ import { createProject } from "../../api-helpers/api-helpers";
 
 const ProjectsList = ({ projects, setProjects }) => {
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const token = localStorage.getItem("token");
 
@@ -26,8 +26,9 @@ const ProjectsList = ({ projects, setProjects }) => {
   const handleProjectSubmit = async (projectName) => {
     try {
       const projectData = { title: projectName };
+      setLoading(true);
       const response = await createProject(projectData, token);
-
+      setLoading(false);
       if (response && response.message === "Project created successfully") {
         const newProjectDetails = response;
         setProjects((prevProjects) => [...prevProjects, newProjectDetails]);
@@ -43,6 +44,10 @@ const ProjectsList = ({ projects, setProjects }) => {
     }
   };
 
+  if (loading) {
+    return  <Spinner loading={loading} />
+  }
+  
   return (
     <div className="bg-white min-h-screen">
       <Navbar />

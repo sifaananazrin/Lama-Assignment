@@ -1,13 +1,17 @@
 import React from "react";
 import { IoIosHome } from "react-icons/io";
 import { AiOutlineSetting, AiOutlineBell, AiOutlineLogout } from "react-icons/ai";
-
+import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    // Add your logout logic here
-    // For example, you can clear the user's session or perform any necessary logout actions
+    localStorage.removeItem("token");
     console.log("User logged out");
+    window.location.reload();
+    navigate('/'); 
   };
+
 
   return (
     <>
